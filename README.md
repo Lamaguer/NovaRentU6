@@ -4,7 +4,7 @@ Equipo 7 · Componentes de Lógica de Negocios · FIME UANL
 **Repositorio:** https://github.com/Lamaguer/NovaRentU6 · **Sistema desplegado:** _(URL)_ · **Swagger/OpenAPI:** _(URL)/docs_
 
 ## Estado
-Dominio, Specifications, máquina de estados y eventos: **hechos y probados**. Pendientes: persistencia, API REST, interfaz, Docker Compose, despliegue.
+Dominio, Specifications, máquina de estados y eventos: **hechos y probados**. Persistencia (SQLAlchemy/PostgreSQL), Unit of Work y servicios de aplicación: **hechos** (pruebas de integración en CI contra PostgreSQL). Pendientes: API REST, interfaz, Docker Compose, despliegue.
 
 ## Ejecutar pruebas
 ```bash
