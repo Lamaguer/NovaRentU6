@@ -1,17 +1,17 @@
-   .git
-   .github
-   .venv
-   __pycache__
-   *.pyc
-   .pytest_cache
-   .ruff_cache
-   htmlcov
-   .coverage
-   .env
-   *.db
-   tests
-   docs
-   README.md
-   Dockerfile
-   docker-compose.yml
-   render.yaml
+.git
+.github
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+htmlcov
+.coverage
+.env
+*.db
+tests
+docs
+README.md
+Dockerfile
+docker-compose.yml
+render.yaml
