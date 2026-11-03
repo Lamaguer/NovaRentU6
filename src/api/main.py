@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 from src.api.mensajes import clasificar
 from src.application.servicios import ServicioNovaRent
 from src.domain.errores import DatosInvalidos, DominioError, RequisitosIncompletos
+from src.domain.valores import Dinero
 from src.infrastructure.db import crear_engine, crear_session_factory, crear_tablas
 from src.infrastructure.seed import sembrar_demo
 
@@ -98,7 +99,7 @@ def create_app(servicio=None, hoy=date.today):
         if d.inicio < hoy():
             raise DatosInvalidos("La fecha de inicio no puede ser anterior a hoy")
         r = svc.reservar(d.cliente.strip(), d.sucursal_id, d.categoria, d.inicio, d.fin)
-        r["total"] = str(float(r["tarifa_diaria"]) * r["dias"])
+        r["total"] = str(Dinero(r["tarifa_diaria"]).por(r["dias"]).monto)
         r["mensaje"] = "Categoría garantizada (sin unidad física específica)."
         return r
 
