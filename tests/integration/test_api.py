@@ -125,3 +125,13 @@ def test_no_encontrado_validacion_y_estado_sin_tecnicismos(client):
     r = client.post(f"/api/rentas/{renta}/devolucion",
                     json={"combustible_octavos": 8, "kilometraje": 1})
     assert r.status_code == 409 and "estado actual" in r.json()["mensaje"]
+
+
+def test_la_interfaz_web_se_sirve_desde_la_raiz(client):
+    r = client.get("/")
+    assert r.status_code == 200 and "text/html" in r.headers["content-type"]
+    assert "NovaRent" in r.text
+    assert client.get("/app.js").status_code == 200 and client.get("/app.css").status_code == 200
+    assert client.get("/health").json() == {"ok": True}          # la API sigue teniendo prioridad
+    assert client.get("/api/sucursales").status_code == 200
+    assert client.get("/docs").status_code == 200
