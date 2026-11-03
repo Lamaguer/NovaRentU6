@@ -1,9 +1,11 @@
 from datetime import date, datetime
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from src.api.mensajes import clasificar
@@ -162,5 +164,10 @@ def create_app(servicio=None, hoy=date.today):
     @app.get("/api/kpis", tags=["administracion"], summary="US-15")
     def kpis():
         return svc.kpis()
+
+    # Interfaz web (src/web). Va al final: las rutas /api, /docs y /health tienen prioridad.
+    web = Path(__file__).resolve().parent.parent / "web"
+    if web.is_dir():
+        app.mount("/", StaticFiles(directory=web, html=True), name="web")
 
     return app
