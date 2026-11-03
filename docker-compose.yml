@@ -1,0 +1,35 @@
+# NovaRent: API + interfaz web + PostgreSQL.
+#   cp .env.example .env     (opcional: cambia la contraseña)
+#   docker compose up --build
+#   Abrir http://localhost:8000   (Swagger: /docs)
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-novarent}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cambiar}
+      POSTGRES_DB: ${POSTGRES_DB:-novarent}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-novarent} -d ${POSTGRES_DB:-novarent}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      PORT: "8000"
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-novarent}:${POSTGRES_PASSWORD:-cambiar}@db:5432/${POSTGRES_DB:-novarent}
+    ports:
+      - "${WEB_PORT:-8000}:8000"
+
+volumes:
+  pgdata:

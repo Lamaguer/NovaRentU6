@@ -1,0 +1,23 @@
+# Blueprint de Render: despliegue en línea de NovaRent (API + interfaz + PostgreSQL).
+# Render > New > Blueprint > conectar el repositorio Lamaguer/NovaRentU6.
+databases:
+  - name: novarent-db
+    databaseName: novarent
+    user: novarent
+    plan: free
+
+services:
+  - type: web
+    name: novarent
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: novarent-db
+          property: connectionString
