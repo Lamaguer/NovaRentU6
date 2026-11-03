@@ -6,11 +6,27 @@ Devuelven diccionarios simples para que la API / interfaz los serialicen sin con
 from datetime import datetime
 from uuid import uuid4
 
-from src.domain.errores import DatosInvalidos, SinDisponibilidad, TransicionInvalida
+from src.domain.errores import (
+    DatosInvalidos,
+    NoEncontrado,
+    RequisitosIncompletos,
+    SinDisponibilidad,
+    TransicionInvalida,
+)
 from src.domain.politicas import TARIFARIO
 from src.domain.renta import Renta
 from src.domain.reservacion import Reservacion
-from src.domain.valores import Dinero, EstadoFisico, PeriodoRenta, RequisitosEntrega, nivel
+from src.domain.specifications import faltantes_entrega
+from src.domain.valores import (
+    Dinero,
+    EstadoFisico,
+    PeriodoRenta,
+    RequisitosEntrega,
+    comparar_estados,
+    nivel,
+)
+from src.infrastructure.pasarela import PasarelaPagoSimulada
+from src.infrastructure.seed import NOMBRES
 from src.infrastructure.unit_of_work import UnitOfWork
 
 
@@ -28,6 +44,20 @@ def vista_reservacion(r):
             "tarifa_diaria": str(r.tarifa_diaria.monto), "estado": r.estado}
 
 
+def _fisico_dict(e):
+    if e is None:
+        return None
+    return {"combustible_octavos": e.combustible_octavos, "kilometraje": e.kilometraje,
+            "danos": list(e.danos)}
+
+
+def _comparacion(r):  # US-09
+    if r.checklist_inicial is None or r.estado_final is None:
+        return None
+    c = comparar_estados(r.checklist_inicial, r.estado_final)
+    return {**c, "danos_nuevos": list(c["danos_nuevos"])}
+
+
 def vista_renta(r):
     cargos = [{"concepto": c.concepto, "monto": str(c.monto.monto), "detalle": c.detalle}
               for c in r.cargos]
@@ -39,7 +69,9 @@ def vista_renta(r):
             "inicio": r.periodo.inicio.isoformat(), "fin": r.periodo.fin.isoformat(),
             "tarifa_diaria": str(r.tarifa_diaria_original.monto),
             "total_renta": str(r.total_renta.monto),
-            "cargos": cargos, "total_cargos": str(total_cargos)}
+            "cargos": cargos, "total_cargos": str(total_cargos),
+            "checklist_inicial": _fisico_dict(r.checklist_inicial),
+            "estado_final": _fisico_dict(r.estado_final), "comparacion": _comparacion(r)}
 
 
 def vista_vehiculo(v):
@@ -48,9 +80,10 @@ def vista_vehiculo(v):
 
 
 class ServicioNovaRent:
-    def __init__(self, session_factory, tarifario=TARIFARIO):
+    def __init__(self, session_factory, tarifario=TARIFARIO, pasarela=None):
         self._factory = session_factory
         self.tarifario = tarifario
+        self.pasarela = pasarela or PasarelaPagoSimulada()
 
     def _uow(self):
         return UnitOfWork(self._factory)
@@ -100,6 +133,28 @@ class ServicioNovaRent:
             return {"sucursal_id": sucursal_id, "categoria": categoria,
                     "dia": dia.isoformat(), "capacidad": inv.capacidad,
                     "disponibles": inv.lugares_disponibles(dia)}
+
+    def sucursales(self):
+        with self._uow() as uow:
+            ids = sorted({i.sucursal_id for i in uow.inventarios.listar()})
+            return [{"id": i, "nombre": NOMBRES.get(i, i)} for i in ids]
+
+    def disponibilidad_periodo(self, sucursal_id, inicio, fin):  # US-01
+        """Solo las categorias con al menos un lugar libre TODOS los dias del periodo."""
+        periodo = PeriodoRenta(inicio, fin)
+        with self._uow() as uow:
+            invs = [i for i in uow.inventarios.listar() if i.sucursal_id == sucursal_id]
+            if not invs:
+                raise NoEncontrado(f"Sucursal {sucursal_id} no existe")
+            salida = []
+            for inv in sorted(invs, key=lambda i: nivel(i.categoria)):
+                lugares = min(inv.lugares_disponibles(d) for d in periodo.dias_cubiertos())
+                if lugares > 0:
+                    tarifa = Dinero(self.tarifario.tarifa_diaria[inv.categoria])
+                    salida.append({"categoria": inv.categoria, "lugares": lugares,
+                                   "tarifa_diaria": str(tarifa.monto),
+                                   "total": str(tarifa.por(periodo.dias).monto)})
+            return salida
 
     # ---- Rentas (US-04..US-14) ----
     def iniciar_renta(self, folio):
@@ -151,6 +206,19 @@ class ServicioNovaRent:
             uow.rentas.guardar(renta)
             uow.commit()
             return vista_renta(renta)
+
+    def entregar_con_tarjeta(self, id_renta, identificacion_valida, licencia_vigente, tarjeta,
+                             checklist):  # RN-02 + US-05 (pasarela simulada)
+        """Cobra el deposito ANTES de entregar: nunca hay renta ENTREGADA sin pago autorizado."""
+        faltantes = faltantes_entrega(RequisitosEntrega(
+            identificacion_valida, licencia_vigente, bool(tarjeta), _estado_fisico(checklist)))
+        pago = False
+        if identificacion_valida and licencia_vigente and tarjeta and not faltantes:
+            total = Dinero(self.obtener_renta(id_renta)["total_renta"])
+            pago = self.pasarela.retener_deposito(tarjeta, total)
+        if faltantes or not pago:
+            raise RequisitosIncompletos(faltantes or ["Falta el pago / deposito autorizado"])
+        return self.entregar(id_renta, identificacion_valida, licencia_vigente, pago, checklist)
 
     def extender(self, id_renta, nueva_fin):  # RN-03 / US-08
         with self._uow() as uow:

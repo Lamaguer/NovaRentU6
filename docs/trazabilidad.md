@@ -12,5 +12,13 @@
 | US-12, BR-04 | Aviso a limpieza | `Vehiculo.devolver` (evento) | `test_us12_us13_ciclo_del_vehiculo`, `test_us10_us11_devolucion_con_cargos_y_limpieza` |
 | US-13 | Vehículo vuelve a Disponible | `Vehiculo.terminar_limpieza` | `test_us12_us13_ciclo_del_vehiculo` |
 | US-14, RN-01 | Upgrade sin costo extra | `upgrade_permitido`, `Renta.aplicar_upgrade` | `test_us14_upgrade_conserva_tarifa_y_entrega_categoria_superior`, `test_rn01_upgrade_rechazado_si_hay_unidades` |
-| US-15, BRD §8 | KPIs: sobreventas, tiempo devolución→disponible, cobros por daños | `ServicioNovaRent.kpis` | `test_us15_kpis` |
+| US-15 | KPIs | `ServicioNovaRent.kpis`, GET `/api/kpis` | `test_flujo_completo_y_persistencia`, `test_flujo_feliz_por_api` |
+| US-01 | Consulta de disponibilidad | `ServicioNovaRent.disponibilidad`, GET `/api/disponibilidad` | `test_us01_disponibilidad_solo_categorias_con_lugar` |
+| US-05 | Pago simulado | `PasarelaPagoSimulada` | `test_us05_pago_rechazado_por_pasarela_simulada` |
+| RN-01 (físico) | Upgrade cuando no hay unidad física | `ServicioNovaRent.entregar/aplicar_upgrade` | `test_rn01_upgrade_cuando_no_hay_unidad_fisica`, `test_upgrade_y_extension_por_api` |
+| Persistencia | Rollback ante error de negocio | `Repositorio`, `_uow` | `test_br02_sobreventa_rechazada_y_nada_se_guarda` |
+| US-15, BRD §8 | KPIs: sobreventas, tiempo devolución→disponible, cobros por daños | `ServicioNovaRent.kpis`, GET `/api/kpis` | `test_us15_kpis`, `test_flujo_feliz_por_api` |
+| US-01 | Consulta de disponibilidad por fechas | `disponibilidad_periodo`, GET `/api/disponibilidad` | `test_us01_disponibilidad_oculta_categorias_llenas` |
+| US-05 | Cobro de depósito simulado antes de entregar | `entregar_con_tarjeta`, `PasarelaPagoSimulada` | `test_us05_pago_rechazado_por_pasarela_simulada` |
+| RN-01 (físico) | Upgrade cuando no hay unidad física | `aplicar_upgrade`, `entregar` | `test_upgrade_y_extension_por_api`, `test_rn01_upgrade_solo_sin_unidades_y_conserva_tarifa` |
 | US-01..US-14 | Persistencia transaccional (rollback si el dominio rechaza) | `UnitOfWork`, `Repositorio*` | `tests/integration/test_servicios.py` |

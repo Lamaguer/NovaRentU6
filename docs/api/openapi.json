@@ -1,0 +1,824 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "NovaRent API",
+    "description": "Sistema de gestión operativa de renta de autos.",
+    "version": "1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "sistema"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sucursales": {
+      "get": {
+        "tags": [
+          "reservaciones"
+        ],
+        "summary": "Sucursales",
+        "operationId": "sucursales_api_sucursales_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/disponibilidad": {
+      "get": {
+        "tags": [
+          "reservaciones"
+        ],
+        "summary": "US-01",
+        "operationId": "disponibilidad_api_disponibilidad_get",
+        "parameters": [
+          {
+            "name": "sucursal_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sucursal Id"
+            }
+          },
+          {
+            "name": "inicio",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Inicio"
+            }
+          },
+          {
+            "name": "fin",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Fin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reservaciones": {
+      "get": {
+        "tags": [
+          "reservaciones"
+        ],
+        "summary": "Reservaciones",
+        "operationId": "reservaciones_api_reservaciones_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "reservaciones"
+        ],
+        "summary": "US-02/US-03",
+        "operationId": "reservar_api_reservaciones_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservaIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reservaciones/{folio}": {
+      "get": {
+        "tags": [
+          "reservaciones"
+        ],
+        "summary": "Reservacion",
+        "operationId": "reservacion_api_reservaciones__folio__get",
+        "parameters": [
+          {
+            "name": "folio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Folio"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rentas": {
+      "get": {
+        "tags": [
+          "rentas"
+        ],
+        "summary": "Rentas",
+        "operationId": "rentas_api_rentas_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "rentas"
+        ],
+        "summary": "Abrir renta desde folio",
+        "operationId": "abrir_api_rentas_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbrirRentaIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rentas/{id_renta}": {
+      "get": {
+        "tags": [
+          "rentas"
+        ],
+        "summary": "Renta",
+        "operationId": "renta_api_rentas__id_renta__get",
+        "parameters": [
+          {
+            "name": "id_renta",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id Renta"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rentas/{id_renta}/upgrade": {
+      "post": {
+        "tags": [
+          "rentas"
+        ],
+        "summary": "RN-01 / US-14",
+        "operationId": "upgrade_api_rentas__id_renta__upgrade_post",
+        "parameters": [
+          {
+            "name": "id_renta",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id Renta"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpgradeIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rentas/{id_renta}/entrega": {
+      "post": {
+        "tags": [
+          "rentas"
+        ],
+        "summary": "RN-02 / US-04..US-07",
+        "operationId": "entrega_api_rentas__id_renta__entrega_post",
+        "parameters": [
+          {
+            "name": "id_renta",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id Renta"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntregaIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rentas/{id_renta}/extension": {
+      "post": {
+        "tags": [
+          "rentas"
+        ],
+        "summary": "RN-03 / US-08",
+        "operationId": "extension_api_rentas__id_renta__extension_post",
+        "parameters": [
+          {
+            "name": "id_renta",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id Renta"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtensionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rentas/{id_renta}/devolucion": {
+      "post": {
+        "tags": [
+          "rentas"
+        ],
+        "summary": "US-09..US-11",
+        "operationId": "devolucion_api_rentas__id_renta__devolucion_post",
+        "parameters": [
+          {
+            "name": "id_renta",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id Renta"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevolucionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/vehiculos": {
+      "get": {
+        "tags": [
+          "limpieza"
+        ],
+        "summary": "Vehiculos",
+        "operationId": "vehiculos_api_vehiculos_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/limpieza": {
+      "get": {
+        "tags": [
+          "limpieza"
+        ],
+        "summary": "US-12",
+        "operationId": "limpieza_api_limpieza_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/vehiculos/{vehiculo_id}/limpieza-terminada": {
+      "post": {
+        "tags": [
+          "limpieza"
+        ],
+        "summary": "US-13",
+        "operationId": "limpieza_terminada_api_vehiculos__vehiculo_id__limpieza_terminada_post",
+        "parameters": [
+          {
+            "name": "vehiculo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehiculo Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kpis": {
+      "get": {
+        "tags": [
+          "administracion"
+        ],
+        "summary": "US-15",
+        "operationId": "kpis_api_kpis_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AbrirRentaIn": {
+        "properties": {
+          "folio": {
+            "type": "string",
+            "title": "Folio"
+          }
+        },
+        "type": "object",
+        "required": [
+          "folio"
+        ],
+        "title": "AbrirRentaIn"
+      },
+      "DevolucionIn": {
+        "properties": {
+          "combustible_octavos": {
+            "type": "integer",
+            "maximum": 8.0,
+            "minimum": 0.0,
+            "title": "Combustible Octavos"
+          },
+          "kilometraje": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Kilometraje"
+          },
+          "danos": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Danos",
+            "default": []
+          },
+          "fecha_hora": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Hora"
+          }
+        },
+        "type": "object",
+        "required": [
+          "combustible_octavos",
+          "kilometraje"
+        ],
+        "title": "DevolucionIn"
+      },
+      "EntregaIn": {
+        "properties": {
+          "identificacion_valida": {
+            "type": "boolean",
+            "title": "Identificacion Valida",
+            "default": false
+          },
+          "licencia_vigente": {
+            "type": "boolean",
+            "title": "Licencia Vigente",
+            "default": false
+          },
+          "tarjeta": {
+            "type": "string",
+            "title": "Tarjeta",
+            "default": ""
+          },
+          "combustible_octavos": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 8.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Combustible Octavos"
+          },
+          "kilometraje": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kilometraje"
+          },
+          "danos": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Danos",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "EntregaIn"
+      },
+      "ExtensionIn": {
+        "properties": {
+          "nueva_fin": {
+            "type": "string",
+            "format": "date",
+            "title": "Nueva Fin"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nueva_fin"
+        ],
+        "title": "ExtensionIn"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ReservaIn": {
+        "properties": {
+          "cliente": {
+            "type": "string",
+            "title": "Cliente"
+          },
+          "sucursal_id": {
+            "type": "string",
+            "title": "Sucursal Id"
+          },
+          "categoria": {
+            "type": "string",
+            "title": "Categoria"
+          },
+          "inicio": {
+            "type": "string",
+            "format": "date",
+            "title": "Inicio"
+          },
+          "fin": {
+            "type": "string",
+            "format": "date",
+            "title": "Fin"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cliente",
+          "sucursal_id",
+          "categoria",
+          "inicio",
+          "fin"
+        ],
+        "title": "ReservaIn"
+      },
+      "UpgradeIn": {
+        "properties": {
+          "categoria_destino": {
+            "type": "string",
+            "title": "Categoria Destino"
+          }
+        },
+        "type": "object",
+        "required": [
+          "categoria_destino"
+        ],
+        "title": "UpgradeIn"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

@@ -20,7 +20,7 @@ def normalizar_url(url):
 
 def crear_engine(url=None):
     url = normalizar_url(url or os.getenv("DATABASE_URL", URL_PRUEBAS))
-    if url.startswith("sqlite") and ":memory:" in url:
+    if url.startswith("sqlite") and (":memory:" in url or url == "sqlite://"):
         return create_engine(url, poolclass=StaticPool, connect_args={"check_same_thread": False})
     return create_engine(url, pool_pre_ping=True)
 

@@ -15,7 +15,10 @@ D = date
 CHECK = {"combustible_octavos": 8, "kilometraje": 1000, "danos": ["rayon puerta"]}
 
 
-def reservar(s, inicio=D(2026, 11, 10), fin=D(2026, 11, 15), categoria="ECONOMICO", **kw):
+INICIO, FIN = D(2026, 11, 10), D(2026, 11, 15)
+
+
+def reservar(s, inicio=INICIO, fin=FIN, categoria="ECONOMICO", **kw):
     return s.reservar("C-01", "MTY-CENTRO", categoria, inicio, fin, **kw)
 
 
@@ -189,7 +192,7 @@ def test_rn01_upgrade_solo_sin_unidades_y_conserva_tarifa(servicio):
         entregar_ok(servicio, servicio.iniciar_renta(f"F-00{i}")["id_renta"])
     up = servicio.aplicar_upgrade(renta["id_renta"], "SUV")
     assert up["categoria_asignada"] == "SUV" and up["tarifa_diaria"] == "500.00"
-    assert entregar_ok(servicio, renta["id_renta"])["vehiculo_id"].startswith("MTY-SUV")
+    assert entregar_ok(servicio, renta["id_renta"])["vehiculo_id"].startswith("MTY-CENTRO-SUV")
 
 
 # ---- KPIs (US-15) ----

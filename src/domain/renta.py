@@ -23,6 +23,7 @@ class Renta:
     def __init__(self, id_renta, reservacion):
         self.id_renta, self.folio = id_renta, reservacion.folio
         self.cliente_id, self.periodo = reservacion.cliente_id, reservacion.periodo
+        self.sucursal_id = reservacion.sucursal_id
         self.tarifa_diaria_original = reservacion.tarifa_diaria  # RN-01: no cambia
         self.categoria_reservada = self.categoria_asignada = reservacion.categoria
         self.vehiculo_id = self.checklist_inicial = self.estado_final = None
