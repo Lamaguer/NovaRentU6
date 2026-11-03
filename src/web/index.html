@@ -1,1 +1,52 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NovaRent · Renta de autos</title>
+  <meta name="description" content="Reserva tu auto en minutos: elige sucursal y fechas y ve al instante qué hay disponible.">
+  <meta name="theme-color" content="#0F2742">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231D5FD6'/%3E%3Cpath d='M9 23V9l14 14V9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+  <header class="top">
+    <div class="top-in">
+      <a class="brand" href="#reservar" aria-label="NovaRent, inicio">
+        <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="currentColor"/>
+          <path d="M9 23V9l14 14V9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>NovaRent</span>
+      </a>
+      <nav id="nav" aria-label="Secciones">
+        <a href="#reservar" data-tab="reservar">Reservar</a>
+        <a href="#renta" data-tab="renta">Mi renta</a>
+        <a href="#sucursal" data-tab="sucursal">Sucursal</a>
+        <a href="#indicadores" data-tab="indicadores">Indicadores</a>
+      </nav>
+    </div>
+  </header>
 
+  <main id="main" tabindex="-1"></main>
+
+  <footer class="pie">
+    <details class="guia">
+      <summary>Guía rápida de la demostración</summary>
+      <ul>
+        <li>Reserva en cualquier sucursal, guarda el folio y búscalo en <b>Mi renta</b>.</li>
+        <li>En <b>Sucursal</b> abre el contrato con ese folio, entrega el auto y regístralo al devolverlo.</li>
+        <li>Una entrega sin licencia, identificación, pago o checklist se bloquea y muestra qué falta.</li>
+        <li>Una tarjeta que termina en <b>0000</b> es rechazada por la pasarela simulada.</li>
+        <li>Con <b>Apodaca</b> y categoría <b>Económico</b> hay lugar reservable, pero la única unidad está en limpieza: la entrega pide un upgrade sin costo extra.</li>
+        <li>Para ver cargos, devuelve con retraso, más kilometraje, menos combustible o daños nuevos.</li>
+      </ul>
+    </details>
+    <p>Sistema de demostración con datos y tarifas ficticios. Proyecto del Equipo 7, FIME UANL.</p>
+  </footer>
+
+  <div id="toasts" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
