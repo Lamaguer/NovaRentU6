@@ -28,6 +28,7 @@ def test_flujo_feliz_por_api(client):
         "MTY-CENTRO", "MTY-AEROPUERTO", "APODACA"}
     r = client.post("/api/reservaciones", json=RES)
     assert r.status_code == 201 and r.json()["dias"] == 5 and "sin unidad" in r.json()["mensaje"]
+    assert r.json()["tarifa_diaria"] == "500.00" and r.json()["total"] == "2500.00"  # Decimal
     folio = r.json()["folio"]
     renta = client.post("/api/rentas", json={"folio": folio}).json()["id_renta"]
     e = client.post(f"/api/rentas/{renta}/entrega", json=ENTREGA)
