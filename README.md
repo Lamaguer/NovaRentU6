@@ -1,7 +1,7 @@
 # NovaRent — Sistema de Gestión Operativa (PIA CLN)
 Equipo 7 · Componentes de Lógica de Negocios · FIME UANL
 
-**Repositorio:** https://github.com/Lamaguer/NovaRentU6 · **Sistema desplegado:** _(pendiente)_ · **Swagger/OpenAPI:** _(pendiente: URL del despliegue + /docs)_
+**Repositorio:** https://github.com/Lamaguer/NovaRentU6 · **Sistema desplegado:** https://novarent.onrender.com/ · **Swagger/OpenAPI:** https://novarent.onrender.com/docs
 
 ## Estado
 Hechos y probados: dominio, Specifications, máquina de estados, eventos, persistencia (SQLAlchemy + Unit of Work, PostgreSQL en CI), casos de uso y API REST. Interfaz web (`src/web`), Docker Compose y configuración de despliegue incluidos.
