@@ -1,7 +1,7 @@
-# NovaRent: API + interfaz web + PostgreSQL.
+# NovaRent: API + interfaz web + PostgreSQL (y pruebas con el perfil "tests").
 #   cp .env.example .env     (opcional: cambia la contraseña)
-#   docker compose up --build
-#   Abrir http://localhost:8000   (Swagger: /docs)
+#   docker compose up --build                              -> app en http://localhost:8000
+#   docker compose --profile tests run --rm tests          -> pruebas contra PostgreSQL
 services:
   db:
     image: postgres:16
@@ -30,6 +30,32 @@ services:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-novarent}:${POSTGRES_PASSWORD:-cambiar}@db:5432/${POSTGRES_DB:-novarent}
     ports:
       - "${WEB_PORT:-8000}:8000"
+
+  db-test:
+    image: postgres:16
+    profiles: ["tests"]
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: novarent_test
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d novarent_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  tests:
+    build:
+      context: .
+      target: test
+    profiles: ["tests"]
+    depends_on:
+      db-test:
+        condition: service_healthy
+    environment:
+      TEST_DATABASE_URL: postgresql+psycopg://test:test@db-test:5432/novarent_test
 
 volumes:
   pgdata:

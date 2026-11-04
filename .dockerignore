@@ -9,7 +9,6 @@ htmlcov
 .coverage
 .env
 *.db
-tests
 docs
 README.md
 Dockerfile
