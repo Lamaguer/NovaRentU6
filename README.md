@@ -62,6 +62,19 @@ Pruebas dentro de Docker, contra una base PostgreSQL separada (`db-test`):
 docker compose --profile tests run --rm tests
 ```
 
+## Demostración
+
+Abre https://novarent.onrender.com/ (o `http://localhost:8000` con Docker Compose). En Render la primera visita puede tardar cerca de un minuto en despertar el servicio.
+
+1. **Reservar:** elige la sucursal Apodaca y las fechas, reserva una categoría y guarda el folio (US-01 a US-03, BR-02).
+2. **Mi renta y Sucursal:** busca el folio y abre el contrato de renta.
+3. **Entrega bloqueada (RN-02):** intenta entregar sin identificación, licencia, pago o checklist; el sistema lo impide y lista lo que falta.
+4. **Pago rechazado:** una tarjeta que termina en `0000` es rechazada por la pasarela simulada (US-05).
+5. **Upgrade sin costo (RN-01):** en Apodaca, categoría Económico, la única unidad está en limpieza; la entrega pide un upgrade a una categoría superior con la tarifa original.
+6. **Devolución y cargos (BR-03):** devuelve con retraso, más kilometraje, menos combustible o daños nuevos y revisa el desglose; después consulta **Indicadores** (US-15).
+
+Todo esto también se puede probar desde Swagger (`/docs`) y está cubierto por pruebas automáticas (ver `docs/trazabilidad.md`).
+
 ## Integración continua y despliegue
 
 - **CI:** `.github/workflows/ci.yml` se ejecuta en cada push y pull request: instala dependencias, corre `ruff` y `pytest` con cobertura mínima de 80 % contra PostgreSQL 16.
