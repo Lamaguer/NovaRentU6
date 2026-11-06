@@ -205,9 +205,9 @@ classDiagram
     class Specification {
         <<abstract>>
         +is_satisfied_by(candidato)
-        +__and__(otra)
-        +__or__(otra)
-        +__invert__()
+        +operador &(otra)
+        +operador |(otra)
+        +operador ~()
     }
     Specification <|-- IdentificacionSpec
     Specification <|-- LicenciaSpec
@@ -217,8 +217,8 @@ classDiagram
     Specification <|-- SinConflictoSpec
     Specification <|-- SinUnidadesSpec
     Specification <|-- CategoriaSuperiorSpec
-    Specification <|-- Compuesta_AND_OR
-    Specification <|-- Not_NOT
+    Specification <|-- Compuesta
+    Specification <|-- NOT
 ```
 
 | Regla | Composición | Candidato |
